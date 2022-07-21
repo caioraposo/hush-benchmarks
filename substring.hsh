@@ -1,0 +1,49 @@
+let util = std.import("util.hsh")
+
+let a = ${ cat data/rna.txt }.stdout
+let b = "AGCTACGATACT"
+
+memo function sub(m, n)
+    if (m == 0 and n == 0) or n == 0 then
+        return 1
+    elseif m == 0 then
+        return 0
+    end
+
+    if a[m - 1] == b[n - 1] then
+        sub(m - 1, n - 1) + sub(m - 1, n)
+    else
+        sub(m - 1, n)
+    end
+end
+
+let table = @[]
+function tsub(m, n)
+    if (m == 0 and n == 0) or n == 0 then
+        return 1
+    elseif m == 0 then
+        return 0
+    elseif std.contains(table, [m, n]) then
+        return table[[m, n]]
+    end
+
+    if a[m - 1] == b[n - 1] then
+        table[[m, n]] = tsub(m - 1, n - 1) + tsub(m - 1, n)
+    else
+        table[[m, n]] = tsub(m - 1, n)
+    end
+    table[[m, n]]
+end
+
+function run_test(f, n, file)
+	${ echo n,time,substr > $file } # csv header
+	for i in std.range(1, n, 1) do
+		let t = util.time_ns()
+	    let r = f(std.len(a), n)
+	    t = (util.time_ns() - t) / 1000000
+	    ${ echo $i,$t,$r >> $file }
+	end
+end
+
+run_test(sub, std.len(b), "data/substring/sub-memo.csv")
+run_test(tsub, std.len(b), "data/substring/sub-hand-memo.csv")
