@@ -1,0 +1,19 @@
+function time_ns()
+	let t = ${ python -c "from time import time_ns; print(time_ns())" }.stdout
+	return std.int(std.trim(t))
+end
+
+function shuf(i, j, n)
+	let v = []
+	for _ in std.range(0, n, 1) do
+		let k = ${ shuf -i$i-$j -n1 }.stdout
+		std.push(v, std.int(std.trim(k)))
+	end
+	v
+end
+
+function gen_random_str(n)
+	${ head /dev/urandom | tr -dc A-Za-z0-9 | head -c $n ; echo '' }.stdout
+end
+
+@[ time_ns: time_ns, shuf: shuf, gen_random_str: gen_random_str ]
