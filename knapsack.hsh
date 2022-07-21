@@ -1,0 +1,54 @@
+let util = std.import("util.hsh")
+
+# Number of elements, value, weight, and capacity
+let n = 50
+let v = util.shuf(0, 30, n)
+let w = util.shuf(0, 30, n)
+let C = 500
+
+function max(a, b)
+	if a >= b then
+		a
+	else
+		b
+	end
+end
+
+memo function knapsack(c, n)
+	if c == 0 or n == 0 then
+		return 0
+	elseif w[n-1] > c then
+		return knapsack(c, n-1)
+	else
+		return max(v[n-1] + knapsack(c-w[n-1], n-1), knapsack(c, n-1))
+	end
+end
+
+let table = @[]
+function hand_knapsack(c, n)
+	if c == 0 or n == 0 then
+		return 0
+	elseif std.contains(table, [c, n]) then
+		return table[[c, n]]
+	end
+
+	if w[n-1] > c then
+		table[[c, n]] = hand_knapsack(c, n-1)
+	else
+		table[[c, n]] = max(v[n-1] + hand_knapsack(c-w[n-1], n-1), hand_knapsack(c, n-1))
+	end
+	table[[c, n]]
+end
+
+function run_test(f, n, file)
+	${ echo n,time,knap > $file } # csv header
+	for i in std.range(1, n+1, 1) do
+		let t = util.time_ns()
+	    let r = f(C, i)
+	    t = (util.time_ns() - t) / 1000000 # ns to ms
+	    ${ echo $i,$t,$r >> $file }
+	end
+end
+
+run_test(knapsack, n, "data/knapsack/knap-memo.csv")
+run_test(hand_knapsack, n, "data/knapsack/knap-hand-memo.csv")
