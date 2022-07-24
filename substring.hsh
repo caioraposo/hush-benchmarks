@@ -41,7 +41,7 @@ end
 function run_test(f, n, file)
 	${ echo n,time,substr > $file } # csv header
 	for i in std.range(1, n, 1) do
-		b = util.gen_random_str(n)
+		b = util.get_random_str(n)
 		let t = util.time_ns()
 		let r = f(std.len(a), n)
 		t = (util.time_ns() - t) / 1000000

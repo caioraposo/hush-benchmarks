@@ -12,8 +12,8 @@ function shuf(i, j, n)
 	v
 end
 
-function gen_random_str(n)
+function get_random_str(n)
 	${ head /dev/urandom | tr -dc A-Za-z0-9 | head -c $n ; echo '' }.stdout
 end
 
-@[ time_ns: time_ns, shuf: shuf, gen_random_str: gen_random_str ]
+@[ time_ns: time_ns, shuf: shuf, get_random_str: get_random_str ]
