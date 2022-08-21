@@ -1,6 +1,6 @@
 let util = std.import("util.hsh")
 
-let n = 30
+let n = 1000
 
 function min(a, b, c)
     if a <= b and a <= c then
@@ -12,15 +12,19 @@ function min(a, b, c)
     c
 end
 
+function tail(s)
+	std.substr(s, 1, std.len(s)-1)
+end
+
 memo function lev(a, b)
     if std.len(b) == 0 then
         std.len(a)
     elseif std.len(a) == 0 then
         std.len(b)
     elseif a[0] == b[0] then
-        lev(std.substr(a, 1, std.len(a)-1), std.substr(b, 1, std.len(b)-1))
+        lev(tail(a), tail(b))
     else
-    	1 + min(lev(std.substr(a, 1, std.len(a)-1), b), lev(a, std.substr(b, 1, std.len(b)-1)), lev(std.substr(a, 1, std.len(a)-1), std.substr(b, 1, std.len(b)-1)))
+    	1 + min(lev(tail(a), b), lev(a, tail(b)), lev(tail(a), tail(b)))
     end
 end
 
@@ -33,26 +37,55 @@ function tlev(a, b)
     elseif std.contains(table, [a, b]) then
     	return table[[a, b]]
     elseif a[0] == b[0] then
-        table[[a, b]] = tlev(std.substr(a, 0, std.len(a)-1), std.substr(b, 0, std.len(b)-1))
+        table[[a, b]] = lev(tail(a), tail(b))
     else
-    	table[[a, b]] = 1 + min(tlev(std.substr(a, 0, std.len(a)-1), b), tlev(a, std.substr(b, 0, std.len(b)-1)), tlev(std.substr(a, 0, std.len(a)-1), std.substr(b, 0, std.len(b)-1)))
+        table[[a, b]] = 1 + min(lev(tail(a), b), lev(a, tail(b)), lev(tail(a), tail(b)))
     end
     table[[a, b]]
 end
 
-function run_test(f, n, file)
-	${ echo n,time,fn > $file } # csv header
-	for i in std.range(0, n, 1) do
-		table = @[]
-		let t = util.time_ns()
-		# Generate random strings each time
-		let s1 = util.get_random_str(n)
-		let s2 = util.get_random_str(n)
-	    let r = f(s1, s2)
-	    t = (util.time_ns() - t) / 1000000
-	    ${ echo $i,$t,$r >> $file }
-	end
+let matrix = [[-1, -1], [-1, -1]]
+function mlev(a, b)
+	let i = std.len(a) - 1
+	let j = std.len(b) - 1
+    if std.len(b) == 0 then
+        return std.len(a)
+    elseif std.len(a) == 0 then
+        return std.len(b)
+    elseif matrix[i][j] != -1 then
+    	return matrix[i][j]
+    elseif a[0] == b[0] then
+        matrix[i][j] = lev(tail(a), tail(b))
+    else
+        matrix[i][j] = 1 + min(lev(tail(a), b), lev(a, tail(b)), lev(tail(a), tail(b)))
+    end
+    matrix[i][j]
 end
 
-run_test(lev, n, "data/leven/lev-memo.csv")
-run_test(tlev, n, "data/leven/lev-hand-memo.csv")
+# Initialize i by j matrix with -1s
+function init_matrix(i, j)
+	let m = []
+	for _ in std.range(0, i, 1) do
+		let l = []
+		for _ in std.range(0, j, 1) do
+			std.push(l, -1)
+		end
+		std.push(m, l)
+	end
+	m
+end
+
+let file = "data/leven/lev-memo.csv"
+let f = lev
+
+# ${ echo n,time,fn > $file } # csv header
+for i in std.range(270, n, 10) do
+	matrix = init_matrix(i+1, i+1)
+	# Generate random strings each time
+	let s1 = util.get_random_str(i)
+	let s2 = util.get_random_str(i)
+	let t = util.time_ns()
+    let r = f(s1, s2)
+    t = (util.time_ns() - t) / 1000000
+    ${ echo $i,$t,$r >> $file }
+end
