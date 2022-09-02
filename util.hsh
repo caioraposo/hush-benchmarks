@@ -1,5 +1,5 @@
 function time_ns()
-	let t = ${ python -c "from time import time_ns; print(time_ns())" }.stdout
+	let t = ${ date +"%s%N" }.stdout
 	return std.int(std.trim(t))
 end
 
