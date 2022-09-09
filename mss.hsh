@@ -1,6 +1,15 @@
-let util = std.import("util.hsh")
+# Author: Caio Raposo
+# Date: 2022-09-09
+# Description: Calculates the maximum subarray sum, and uses memoization to run
+# in time complexity O(n) instead of O(n²), where n is the array length. 
+# Example: v = [-25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4]
+# Solution: v[5..8] = [18, 20, -7, 12]
+# Reference: Introduction to Algorithms 3ed, Cormen et al, pages 68 and 387.
 
-let n = 100
+let util = std.import("util.hsh")
+let args = std.args()
+
+let n = args[0]
 let v = util.shuf(1, 30, n)
 
 function max(n, m, o)
@@ -33,16 +42,10 @@ function tmss(i)
 	end
 end
 
-function run_test(f, n, file)
-	${ echo n,time,fn > $file } # csv header
-	for i in std.range(0, n, 1) do
-		table = @[]
-		let t = util.time_ns()
-		let r = f(i)
-		t = (util.time_ns() - t) / 1000000
-		${ echo $i,$t,$r >> $file }
-	end
+for i in std.range(0, n, 1) do
+	table = @[]
+	let t = util.time_ns()
+	let r = mss(i)
+	t = (util.time_ns() - t) / 1000000
+	{ echo $i,$t,$r }
 end
-
-run_test(mss, n, "data/mss/mss-memo.csv")
-run_test(tmss, n, "data/mss/mss-hand-memo.csv")

@@ -1,4 +1,9 @@
-# https://projecteuler.net/problem=623
+# Author: Caio Raposo
+# Date: 2022-09-09
+# Description: Solution to Project Euler Problem #623 (Lambda Count).
+# The algorithm calculates the number of distinct closed lambda-terms that can
+# be written using at most n symbols.
+# Reference: https://projecteuler.net/problem=623
 
 let util = std.import("util.hsh")
 
