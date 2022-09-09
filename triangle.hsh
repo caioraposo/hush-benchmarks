@@ -7,31 +7,31 @@ for i in std.range(1, n, 1) do
 end
 
 function min(a, b)
-    if a <= b then
-        a
-    else
-        b
-    end
+	if a <= b then
+		a
+	else
+		b
+	end
 end
 
 memo function min_path_sum(i, j, k)
-    if i == k - 1 then
-        t[i][j]
-    else
-        min(min_path_sum(i + 1, j, k), min_path_sum(i + 1, j + 1, k)) + t[i][j]
-    end
+	if i == k - 1 then
+		t[i][j]
+	else
+		min(min_path_sum(i + 1, j, k), min_path_sum(i + 1, j + 1, k)) + t[i][j]
+	end
 end
 
 let table = @[]
 function tmin_path_sum(i, j, k)
-    if i == k - 1 then
-        t[i][j]
-    elseif std.contains(table, [i, j]) then
-    	table[[i, j]]
-    else
-        table[[i, j]] = min(min_path_sum(i + 1, j, k), min_path_sum(i + 1, j + 1, k)) + t[i][j]
-        table[[i, j]]
-    end
+	if i == k - 1 then
+		t[i][j]
+	elseif std.contains(table, [i, j]) then
+		table[[i, j]]
+	else
+		table[[i, j]] = min(min_path_sum(i + 1, j, k), min_path_sum(i + 1, j + 1, k)) + t[i][j]
+		table[[i, j]]
+	end
 end
 
 function run_test(f, n, file)
@@ -39,9 +39,9 @@ function run_test(f, n, file)
 	for i in std.range(1, n, 1) do
 		table = @[]
 		let t = util.time_ns()
-	    let r = f(0, 0, i)
-	    t = (util.time_ns() - t) / 1000000
-	    ${ echo $i,$t,$r >> $file }
+		let r = f(0, 0, i)
+		t = (util.time_ns() - t) / 1000000
+		${ echo $i,$t,$r >> $file }
 	end
 end
 

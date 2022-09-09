@@ -1,11 +1,20 @@
+# Author: Caio Raposo
+# Date: 2022-09-09
+# Description: This is a recursive algorithm for retrieving the nth element of
+# the fibonacci sequence. Runs on O(n) with memoization.
+# References: https://www.ics.uci.edu/~eppstein/161/960109.html
+
 let util = std.import("util.hsh")
+let args = std.args()
+
+let n = args[0]
 
 memo function fib(n)
-    if n < 2 then
-        1
-    else
-        fib(n - 1) + fib(n - 2)
-    end
+	if n < 2 then
+		1
+	else
+		fib(n - 1) + fib(n - 2)
+	end
 end
 
 let table = @[]
@@ -20,15 +29,9 @@ function tfib(n)
 	end
 end
 
-function run_test(f, n, file)
-	${ echo n,time,fib > $file } # csv header
-	for i in std.range(1, n+1, 1) do
-		let t = util.time_ns()
-	    let r = f(i)
-	    t = (util.time_ns() - t) / 1000000 # ns to ms
-	    ${ echo $i,$t,$r >> $file }
-	end
+for i in std.range(1, n+1, 1) do
+	let t = util.time_ns()
+	let r = fib(i)
+	t = (util.time_ns() - t) / 1000000 # ns to ms
+	{ echo $i,$t,$r }
 end
-
-run_test(fib, 70, "data/fibonacci/fib-memo.csv")
-run_test(fib, 70, "data/fibonacci/fib-hand-memo.csv")

@@ -5,35 +5,35 @@ let b = ""
 let n = 40
 
 memo function sub(m, n)
-    if (m == 0 and n == 0) or n == 0 then
-        return 1
-    elseif m == 0 then
-        return 0
-    end
+	if (m == 0 and n == 0) or n == 0 then
+		return 1
+	elseif m == 0 then
+		return 0
+	end
 
-    if a[m - 1] == b[n - 1] then
-        sub(m - 1, n - 1) + sub(m - 1, n)
-    else
-        sub(m - 1, n)
-    end
+	if a[m - 1] == b[n - 1] then
+		sub(m - 1, n - 1) + sub(m - 1, n)
+	else
+		sub(m - 1, n)
+	end
 end
 
 let table = @[]
 function tsub(m, n)
-    if (m == 0 and n == 0) or n == 0 then
-        return 1
-    elseif m == 0 then
-        return 0
-    elseif std.contains(table, [m, n]) then
-        return table[[m, n]]
-    end
+	if (m == 0 and n == 0) or n == 0 then
+		return 1
+	elseif m == 0 then
+		return 0
+	elseif std.contains(table, [m, n]) then
+		return table[[m, n]]
+	end
 
-    if a[m - 1] == b[n - 1] then
-        table[[m, n]] = tsub(m - 1, n - 1) + tsub(m - 1, n)
-    else
-        table[[m, n]] = tsub(m - 1, n)
-    end
-    table[[m, n]]
+	if a[m - 1] == b[n - 1] then
+		table[[m, n]] = tsub(m - 1, n - 1) + tsub(m - 1, n)
+	else
+		table[[m, n]] = tsub(m - 1, n)
+	end
+	table[[m, n]]
 end
 
 # Note that the cached results are reused throughout multiple executions.

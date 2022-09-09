@@ -1,6 +1,16 @@
-let util = std.import("util.hsh")
+# Author: Caio Raposo
+# Date: 2022-09-09
+# Description: This program computes the Levenshtein distance, which is a string
+# metric for measuring the difference between two sequences.
+# This implementation has time complexity of O(n²).
+# References: https://users.monash.edu/~lloyd/tildeAlgDS/Dynamic/Edit/
 
-let n = 1000
+let util = std.import("util.hsh")
+let args = std.args()
+
+let n = std.int(args[0])
+let m = std.int(args[1])
+let o = std.int(args[2])
 
 function min(a, b, c)
 	if a <= b and a <= c then
@@ -16,7 +26,6 @@ function tail(s)
 	std.substr(s, 1, std.len(s)-1)
 end
 
-# Builtin memoization
 memo function lev(a, b)
 	if std.len(b) == 0 then
 		std.len(a)
@@ -29,7 +38,6 @@ memo function lev(a, b)
 	end
 end
 
-# Handcrafted table memoization
 let table = @[]
 function tlev(a, b)
 	if std.len(b) == 0 then
@@ -39,60 +47,19 @@ function tlev(a, b)
 	elseif std.contains(table, [a, b]) then
 		return table[[a, b]]
 	elseif a[0] == b[0] then
-		table[[a, b]] = lev(tail(a), tail(b))
+		table[[a, b]] = tlev(tail(a), tail(b))
 	else
-		table[[a, b]] = 1 + min(lev(tail(a), b), lev(a, tail(b)), lev(tail(a), tail(b)))
+		table[[a, b]] = 1 + min(tlev(tail(a), b), tlev(a, tail(b)), tlev(tail(a), tail(b)))
 	end
 	table[[a, b]]
 end
 
-# Handcrafted matrix memoization
-let matrix = [[-1, -1], [-1, -1]]
-function mlev(a, b)
-	let i = std.len(a) - 1
-	let j = std.len(b) - 1
-	if std.len(b) == 0 then
-		return std.len(a)
-	elseif std.len(a) == 0 then
-		return std.len(b)
-	elseif matrix[i][j] != -1 then
-		return matrix[i][j]
-	elseif a[0] == b[0] then
-		matrix[i][j] = lev(tail(a), tail(b))
-	else
-		matrix[i][j] = 1 + min(lev(tail(a), b), lev(a, tail(b)), lev(tail(a), tail(b)))
-	end
-	matrix[i][j]
+for i in std.range(n, m, o) do
+	# Generate random strings each time
+	let s1 = util.get_random_str(i)
+	let s2 = util.get_random_str(i)
+	let t = util.time_ns()
+	let r = lev(s1, s2)
+	t = (util.time_ns() - t) / 1000000 # ns to ms
+	{ echo $i,$t,$r }
 end
-
-# Initialize i by j matrix with -1s
-function init_matrix(i, j)
-	let m = []
-	for _ in std.range(0, i, 1) do
-		let l = []
-		for _ in std.range(0, j, 1) do
-			std.push(l, -1)
-		end
-		std.push(m, l)
-	end
-	m
-end
-
-# Benchmark code
-function run_test(f, file)
-	${ echo n,time,fn > $file } # csv header
-	for i in std.range(0, n, 10) do
-		matrix = init_matrix(i+1, i+1)
-		# Generate random strings each time
-		let s1 = util.get_random_str(i)
-		let s2 = util.get_random_str(i)
-		let t = util.time_ns()
-		let r = f(s1, s2)
-		t = (util.time_ns() - t) / 1000000
-		${ echo $i,$t,$r >> $file }
-	end
-end
-
-run_test(lev, "data/leven/lev-memo.csv")
-run_test(tlev, "data/leven/lev-hand-memo.csv")
-run_test(mlev, "data/leven/lev-hand-matrix-memo.csv")

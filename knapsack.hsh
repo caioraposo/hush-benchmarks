@@ -1,10 +1,20 @@
-let util = std.import("util.hsh")
+# Author: Caio Raposo
+# Date: 2022-09-09
+# Description: This is an implementation of a solution to the classic Knapsack
+# Problem on O(nC), where n is the number of different items, and C is the
+# total capacity of the knapsack. The solution uses dynamic programming to
+# memoize subproblems, and thus compose the solution to each problem.
+# References: Algorithms, Dasgupta et al, page 171.
 
-# Number of elements, value, weight, and capacity
-let n = 50
+let util = std.import("util.hsh")
+let args = std.args()
+
+# Number of elements, capacity
+let n = std.int(args[0])
+let C = std.int(args[1])
+# Get random values [0..30] and weights for the elements
 let v = util.shuf(0, 30, n)
 let w = util.shuf(0, 30, n)
-let C = 500
 
 function max(a, b)
 	if a >= b then
@@ -16,16 +26,16 @@ end
 
 memo function knapsack(c, n)
 	if c == 0 or n == 0 then
-		return 0
+		0
 	elseif w[n-1] > c then
-		return knapsack(c, n-1)
+		knapsack(c, n-1)
 	else
-		return max(v[n-1] + knapsack(c-w[n-1], n-1), knapsack(c, n-1))
+		max(v[n-1] + knapsack(c-w[n-1], n-1), knapsack(c, n-1))
 	end
 end
 
 let table = @[]
-function hand_knapsack(c, n)
+function tknapsack(c, n)
 	if c == 0 or n == 0 then
 		return 0
 	elseif std.contains(table, [c, n]) then
@@ -33,22 +43,16 @@ function hand_knapsack(c, n)
 	end
 
 	if w[n-1] > c then
-		table[[c, n]] = hand_knapsack(c, n-1)
+		table[[c, n]] = tknapsack(c, n-1)
 	else
-		table[[c, n]] = max(v[n-1] + hand_knapsack(c-w[n-1], n-1), hand_knapsack(c, n-1))
+		table[[c, n]] = max(v[n-1] + tknapsack(c-w[n-1], n-1), tknapsack(c, n-1))
 	end
 	table[[c, n]]
 end
 
-function run_test(f, n, file)
-	${ echo n,time,knap > $file } # csv header
-	for i in std.range(1, n+1, 1) do
-		let t = util.time_ns()
-	    let r = f(C, i)
-	    t = (util.time_ns() - t) / 1000000 # ns to ms
-	    ${ echo $i,$t,$r >> $file }
-	end
+for i in std.range(1, n+1, 1) do
+	let t = util.time_ns()
+	let r = knapsack(C, i)
+	t = (util.time_ns() - t) / 1000000 # ns to ms
+	{ echo $i,$t,$r }
 end
-
-run_test(knapsack, n, "data/knapsack/knap-memo.csv")
-run_test(hand_knapsack, n, "data/knapsack/knap-hand-memo.csv")
