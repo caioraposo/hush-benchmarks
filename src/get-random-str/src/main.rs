@@ -2,8 +2,8 @@ use std::env;
 use rand::Rng;
 
 fn main() {
-	let args: Vec<String> = env::args().collect();
-	let n: usize = args[1].parse().unwrap();
+    let args: Vec<String> = env::args().collect();
+    let n: usize = args[1].parse().unwrap();
     let mut rng = rand::thread_rng();
 
     let mut chars: Vec<u8> = vec![0; n];
