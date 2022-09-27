@@ -6,9 +6,12 @@
 # Reference: https://projecteuler.net/problem=623
 
 let util = std.import("util.hsh")
+let args = std.args()
 
 let MOD = 1000000007
-let n = 2000
+let n = std.int(args[0])
+
+let outfile = args[1]
 
 memo function lambda_terms(n, k)
 	if n <= 0 then
@@ -25,9 +28,20 @@ memo function lambda_terms(n, k)
 	answer
 end
 
-let answer = 0
-for i in std.range(0, n + 1, 1) do
-	answer = (answer + lambda_terms(i, 0)) % MOD
+function solve(n)
+	let answer = 0
+	for i in std.range(0, n + 1, 1) do
+		answer = (answer + lambda_terms(i, 0)) % MOD
+	end
+	answer
 end
 
-std.print(answer)
+
+{ echo n,time,fn > $outfile }
+for i in std.range(1, n, 1) do
+	let t = util.time_ns()
+	let r = solve(i)
+	t = (util.time_ns() - t)
+	std.println(i, t, r)
+	{ echo $i,$t,$r >> $outfile }
+end
