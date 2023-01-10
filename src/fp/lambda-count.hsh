@@ -5,7 +5,7 @@
 # be written using at most n symbols.
 # Reference: https://projecteuler.net/problem=623
 
-let util = std.import("util.hsh")
+let util = std.import("../util.hsh")
 
 let MOD = 1000000007
 let n = 2000

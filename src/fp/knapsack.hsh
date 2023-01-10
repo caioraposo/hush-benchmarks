@@ -6,7 +6,7 @@
 # memoize subproblems, and thus compose the solution to each problem.
 # References: Algorithms, Dasgupta et al, page 171.
 
-let util = std.import("util.hsh")
+let util = std.import("../util.hsh")
 let args = std.args()
 
 # Number of elements, capacity, value, weight

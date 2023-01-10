@@ -4,7 +4,7 @@
 # the fibonacci sequence. Runs on O(n) with memoization.
 # References: https://www.ics.uci.edu/~eppstein/161/960109.html
 
-let util = std.import("util.hsh")
+let util = std.import("../util.hsh")
 let args = std.args()
 
 let n = args[0]

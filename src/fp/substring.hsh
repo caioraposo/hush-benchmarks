@@ -6,7 +6,7 @@
 # the size of the first string, and N the second.
 # Reference: https://www.geeksforgeeks.org/find-number-times-string-occurs-given-string/
 
-let util = std.import("util.hsh")
+let util = std.import("../util.hsh")
 let args = std.args()
 
 let a = ${ cat data/rna.txt }.stdout

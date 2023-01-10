@@ -6,7 +6,7 @@
 # Solution: v[5..8] = [18, 20, -7, 12]
 # Reference: Introduction to Algorithms 3ed, Cormen et al, pages 68 and 387.
 
-let util = std.import("util.hsh")
+let util = std.import("../util.hsh")
 let args = std.args()
 
 let n = std.int(args[0])
@@ -14,13 +14,11 @@ let v = []
 
 let outfile = args[1]
 
-function max(n, m, o)
-	if n >= m and n >= o then
+function max(n, m)
+	if n >= m then
 		n
-	elseif m >= n and m >= o then
-		m
 	else
-		o
+		m
 	end
 end
 
@@ -30,7 +28,7 @@ memo function mss(v, i)
 	elseif i == 0 then
 		v[0]
 	else
-		max(mss(v, i-1), mss(v, i-1) + v[i], v[i])
+		max(mss(v, i-1) + v[i], v[i])
 	end
 end
 

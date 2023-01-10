@@ -12,8 +12,12 @@ function shuf(i, j, n)
 	v
 end
 
+function randint(i, j)
+	std.int(std.trim(${ seq $i $j | shuf -n1 }.stdout))
+end
+
 function get_random_str(n)
 	${ ./bin/get-random-str $n }.stdout
 end
 
-@[ time_ns: time_ns, shuf: shuf, get_random_str: get_random_str ]
+@[ time_ns: time_ns, shuf: shuf, randint: randint, get_random_str: get_random_str ]

@@ -1,0 +1,42 @@
+# Author: Caio Raposo
+# Date: 2023-01-10
+# Description: This program generates random polygons in 3D space. Polygons are
+# a list of arbitrary points of which shall be reutilized by multiple polygons
+# if memoization is active.
+
+let util = std.import("../util.hsh")
+let args = std.args()
+
+# Dimentions of the 3D space
+let X = std.int(args[0])
+let Y = std.int(args[1])
+let Z = std.int(args[2])
+
+# Number of polygons
+let N = std.int(args[3])
+
+let Point = memo function(x, y, z)
+	@[
+		_x: x,
+		_y: y,
+		_z: z,
+	]	
+end
+
+function Polygon(n)
+	let points = []
+	for _ in std.range(0, n, 1) do
+		let x = util.randint(0, X)
+		let y = util.randint(0, Y)
+		let z = util.randint(0, Z)
+		let p = Point(x, y, z)
+		std.push(points, p)
+	end
+	points
+end
+
+# Create random polygons in 3D space
+let polygons = []
+for _ in std.range(0, N, 1) do
+	std.push(polygons, Polygon(3))
+end

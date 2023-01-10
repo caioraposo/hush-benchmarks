@@ -15,7 +15,7 @@
 #
 # Reference: 
 
-let util = std.import("util.hsh")
+let util = std.import("../util.hsh")
 let args = std.args()
 
 let n = std.int(args[0])
