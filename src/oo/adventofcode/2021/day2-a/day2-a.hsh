@@ -50,10 +50,13 @@ function solve(input)
 			sub = Up(sub).move(n)
 		else if m[0] == "down" then
 			sub = Down(sub).move(n)
+		else
+			std.println("Invalid move", m[0])
+			std.exit()
 		end
 	end
 	sub._x * sub._y
 end
 
-let input = ${ cat input.txt }.stdout
+let input = ${ cat input/in1 }.stdout
 std.println(solve(std.split(input, "\n")))

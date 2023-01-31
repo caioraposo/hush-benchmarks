@@ -15,12 +15,10 @@
 #
 # Reference: 
 
-let util = std.import("../util.hsh")
+let util = std.import("../../util.hsh")
 let args = std.args()
 
 let n = std.int(args[0])
-
-let outfile = args[1]
 
 # Generate triangle of size n
 function generate_random_triangle(n)
@@ -59,12 +57,11 @@ function tmin_path_sum(t, i, j, k)
 	end
 end
 
-{ echo n,time,fn > $outfile }
+std.println("n,time(ms),fn")
 for i in std.range(1, n, 1) do
 	let triangle = generate_random_triangle(i+1)
 	let t = util.time_ns()
 	let r = min_path_sum(triangle, 0, 0, i)
-	t = (util.time_ns() - t)
-	std.println(i, t, r)
-	{ echo $i,$t,$r >> $outfile }
+	t = (util.time_ns() - t) / 1000000 # ms to ms
+	{ echo $i,$t,$r }
 end

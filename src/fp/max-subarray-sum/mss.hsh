@@ -6,13 +6,11 @@
 # Solution: v[5..8] = [18, 20, -7, 12]
 # Reference: Introduction to Algorithms 3ed, Cormen et al, pages 68 and 387.
 
-let util = std.import("../util.hsh")
+let util = std.import("../../util.hsh")
 let args = std.args()
 
 let n = std.int(args[0])
 let v = []
-
-let outfile = args[1]
 
 function max(n, m)
 	if n >= m then
@@ -32,12 +30,11 @@ memo function mss(v, i)
 	end
 end
 
-{ echo n,time,fn > $outfile } # csv header
+std.println("n,time(μs),fn") # csv header
 for i in std.range(0, n, 1) do
 	v = util.shuf(-30, 30, i+1)
 	let t = util.time_ns()
 	let r = mss(v, i)
-	t = (util.time_ns() - t)
-	std.println(i, t, r)
-	{ echo $i,$t,$r >> $outfile }
+	t = (util.time_ns() - t) / 1000 # ns to μs
+	{ echo $i,$t,$r }
 end

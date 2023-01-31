@@ -5,10 +5,11 @@
 # be written using at most n symbols.
 # Reference: https://projecteuler.net/problem=623
 
-let util = std.import("../util.hsh")
+let util = std.import("../../util.hsh")
+let args = std.args()
 
 let MOD = 1000000007
-let n = 2000
+let n = std.int(args[0])
 
 memo function lambda_terms(n, k)
 	if n <= 0 then
@@ -30,4 +31,4 @@ for i in std.range(0, n + 1, 1) do
 	answer = (answer + lambda_terms(i, 0)) % MOD
 end
 
-std.print(answer)
+std.println(answer)

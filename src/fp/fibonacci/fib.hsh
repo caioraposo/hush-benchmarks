@@ -4,10 +4,10 @@
 # the fibonacci sequence. Runs on O(n) with memoization.
 # References: https://www.ics.uci.edu/~eppstein/161/960109.html
 
-let util = std.import("../util.hsh")
+let util = std.import("../../util.hsh")
 let args = std.args()
 
-let n = args[0]
+let n = std.int(args[0])
 
 memo function fib(n)
 	if n < 2 then
@@ -29,9 +29,10 @@ function tfib(n)
 	end
 end
 
+std.println("n,time(μs),fib(n)")
 for i in std.range(1, n+1, 1) do
 	let t = util.time_ns()
 	let r = fib(i)
-	t = (util.time_ns() - t) / 1000000 # ns to ms
+	t = (util.time_ns() - t) / 1000 # ns to μs
 	{ echo $i,$t,$r }
 end

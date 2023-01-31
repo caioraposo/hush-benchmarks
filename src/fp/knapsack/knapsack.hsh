@@ -6,18 +6,16 @@
 # memoize subproblems, and thus compose the solution to each problem.
 # References: Algorithms, Dasgupta et al, page 171.
 
-let util = std.import("../util.hsh")
+let util = std.import("../../util.hsh")
 let args = std.args()
 
-# Number of elements, capacity, value, weight
+# Number of elements and capacity
 let n = std.int(args[0])
 let C = std.int(args[1])
 
-# The values and weights will be defined later, and captured the the functions.
+# The values and weights will be defined and captured by the functions later.
 let v = []
 let w = []
-
-let outfile = args[2]
 
 function max(a, b)
 	if a >= b then
@@ -53,14 +51,13 @@ function tknapsack(c, n)
 	table[[c, n]]
 end
 
-{ echo n,time,r > $outfile } # csv header
+std.println("n,time(μs),knapsack(n)") # csv header
 for i in std.range(1, n+1, 1) do
 	# Get random values [0..100] and weights for the elements
 	v = util.shuf(0, 100, i)
 	w = util.shuf(0, 100, i)
 	let t = util.time_ns()
-	let r = knapsack(C, i)
-	t = (util.time_ns() - t)
-	std.println(i, t, r)
-	{ echo $i,$t,$r >> $outfile }
+	let r = tknapsack(C, i)
+	t = (util.time_ns() - t) / 1000 # ns to μs
+	{ echo $i,$t,$r }
 end

@@ -6,10 +6,10 @@
 # the size of the first string, and N the second.
 # Reference: https://www.geeksforgeeks.org/find-number-times-string-occurs-given-string/
 
-let util = std.import("../util.hsh")
+let util = std.import("../../util.hsh")
 let args = std.args()
 
-let a = ${ cat data/rna.txt }.stdout
+let a = ${ cat input/rna.txt }.stdout
 let b = "GATCGCCATTATTTTGGCATCTTTTTCTGACTATGCATGCAGCTACGACHTACACTACATACATCA"
 let n = std.int(args[0])
 
@@ -47,10 +47,11 @@ end
 
 # Note that the cached results are reused throughout multiple executions.
 # 'table' is also not reseted.
+std.println("n,time(μs),sub(n)")
 for i in std.range(1, n, 1) do
 	b = util.get_random_str(n)
 	let t = util.time_ns()
 	let r = tsub(std.len(a), n)
-	t = (util.time_ns() - t) / 1000000
+	t = (util.time_ns() - t) / 1000 # ns to μs
 	{ echo $i,$t,$r }
 end

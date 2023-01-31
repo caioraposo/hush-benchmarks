@@ -4,7 +4,7 @@
 # a list of arbitrary points of which shall be reutilized by multiple polygons
 # if memoization is active.
 
-let util = std.import("../util.hsh")
+let util = std.import("../../util.hsh")
 let args = std.args()
 
 # Dimentions of the 3D space
@@ -38,5 +38,7 @@ end
 # Create random polygons in 3D space
 let polygons = []
 for _ in std.range(0, N, 1) do
-	std.push(polygons, Polygon(3))
+	let p = Polygon(3)
+	std.push(polygons, p)
+	std.println(p)
 end

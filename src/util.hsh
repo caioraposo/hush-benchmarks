@@ -17,7 +17,7 @@ function randint(i, j)
 end
 
 function get_random_str(n)
-	${ ./bin/get-random-str $n }.stdout
+	${ ./../../../bin/get-random-str $n }.stdout
 end
 
 @[ time_ns: time_ns, shuf: shuf, randint: randint, get_random_str: get_random_str ]

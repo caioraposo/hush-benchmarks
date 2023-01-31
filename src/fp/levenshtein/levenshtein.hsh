@@ -5,7 +5,7 @@
 # This implementation has time complexity of O(n²).
 # References: https://users.monash.edu/~lloyd/tildeAlgDS/Dynamic/Edit/
 
-let util = std.import("../util.hsh")
+let util = std.import("../../util.hsh")
 let args = std.args()
 
 let n = std.int(args[0])
@@ -54,6 +54,7 @@ function tlev(a, b)
 	table[[a, b]]
 end
 
+std.println("n,time(ms),lev(n)")
 for i in std.range(n, m, o) do
 	# Generate random strings each time
 	let s1 = util.get_random_str(i)
