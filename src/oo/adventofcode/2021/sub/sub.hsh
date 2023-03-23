@@ -1,0 +1,82 @@
+# Author: Caio Raposo
+# Date: 2023-01-19
+# Description: This program implements the solution to advent of code 2021 day 2
+# in OO style. The base class Move and three subclasses Forward, Up and Down.
+# The method `move` returns a new submarine.
+# References: https://adventofcode.com/2021/day/2
+
+let file = std.args()[0]
+let input = ${ cat $file }.stdout
+
+let Submarine = memo function(x, y)
+	@[
+		_x: x,
+		_y: y,
+	]
+end
+
+# Note that we don't memo the base class
+let Move = function(sub)
+	@[
+		_sub: sub,
+
+		move: function()
+			# Should be implemented in the subclasses.
+			std.panic("method not implemented")
+		end,
+	]
+end
+
+let Forward = memo function(sub)
+	let super = Move(sub)
+
+	super.move = function(n)
+		Submarine(self._sub._x + n, self._sub._y)
+	end
+
+	super
+end
+
+let Up = memo function(sub)
+	let super = Move(sub)
+
+	super.move = function(n)
+		Submarine(self._sub._x, self._sub._y - n)
+	end
+
+	super
+end
+
+let Down = memo function(sub)
+	let super = Move(sub)
+
+	super.move = function(n)
+		Submarine(self._sub._x, self._sub._y + n)
+	end
+
+	super
+end
+
+let movements = @[
+	forward: function(sub, n)
+		Forward(sub).move(n)
+	end,
+	up: function(sub, n)
+		Up(sub).move(n)
+	end,
+	down: function(sub, n)
+		Down(sub).move(n)
+	end,
+]
+
+function solve(input)
+	let sub = Submarine(0, 0)
+	for i in std.range(0, std.len(input) - 1, 1) do
+		let line = input[i]
+		let m = std.split(line, " ")
+		sub = movements[m[0]](sub, std.int(m[1]))
+	end
+	sub._x * sub._y
+end
+
+std.println(solve(std.split(input, "\n")))
