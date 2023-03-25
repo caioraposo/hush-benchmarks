@@ -1,0 +1,76 @@
+# Author: Caio Raposo
+# Date: 2023-03-23
+# Description: This program evaluates arithmetic expressions by modeling
+# operators as memoized objects, thus avoiding recalculating past computations.
+
+let Num = memo function(n)
+	@[
+		_n: n,
+
+		eval: function()
+			self._n
+		end
+	]
+end
+
+let Add = memo function(a, b)
+	@[
+		_a: a,
+		_b: b,
+
+		eval: function()
+			self._a.eval() + self._b.eval()
+		end
+	]
+end
+
+let Sub = memo function(a, b)
+	@[
+		_a: a,
+		_b: b,
+
+		eval: function()
+			self._a.eval() - self._b.eval()
+		end
+	]
+end
+
+let Mul = memo function(a, b)
+	@[
+		_a: a,
+		_b: b,
+
+		eval: function()
+			self._a.eval() * self._b.eval()
+		end
+	]
+end
+
+
+let Div = memo function(a, b)
+	@[
+		_a: a,
+		_b: b,
+
+		eval: function()
+			if self._b.eval() == 0 then
+				self._a.eval()
+			else
+				self._a.eval() / self._b.eval()
+			end
+		end
+	]
+end
+
+function test0()
+	let n0 = Num(10000)
+	let n1 = Num(20000)
+	let n2 = Add(n0, n1)
+	let n3 = Div(Mul(n0, n1), Div(n1, n0))
+	let n4 = Div(n1, n0)
+
+	std.println(n3.eval())
+	std.println(n4.eval())
+end
+
+test0()
