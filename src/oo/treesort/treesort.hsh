@@ -3,12 +3,23 @@
 # Description: Tree sort algorithm implementation. It builds a binary search
 # tree and then traveres it in-order so that the elements are visited in sorted
 # order. This algorithm has average time complexity of O(n lg n) and worst-case
-# performance of O(n²) if the tree is unbalanced but O(n lg n) otherwise.
+# performance of O(n²) if the tree is unbalanced.
+# References: Sorting Routines for Microcomputers, McLuckie and Barber, page 58.
 
 let args = std.args()
 
 # Number of elements in the tree.
 let N = std.int(args[0])
+
+let Rational = memo function(p, q)
+	@[
+		_p: std.float(p),
+		_q: std.float(q),
+		value: function()
+			self._p / self._q
+		end
+	]
+end
 
 let Node = function(n)
 	@[
@@ -25,7 +36,7 @@ let BinarySearchTree = function()
 		_push_r: function(r, n)
 			if r == nil then
 				r = Node(n)
-			elseif r._n >= n then
+			elseif r._n.value() >= n.value() then
 				r._left = self._push_r(r._left, n)
 			else
 				r._right = self._push_r(r._right, n)
@@ -47,7 +58,7 @@ let BinarySearchTree = function()
 					node = node._left
 				else
 					node = std.pop(stack)
-					std.push(sorted, node._n)
+					std.push(sorted, node._n.value())
 					node = node._right
 				end
 			end
@@ -56,9 +67,11 @@ let BinarySearchTree = function()
 	]
 end
 
+let MAXINT = 1000
 let t = BinarySearchTree()
 for i in std.range(0, N, 1) do
-	t.push(std.randint(0, 1000))
+	let n = Rational(std.randint(0, MAXINT), std.randint(0, MAXINT))
+	t.push(q)
 end
 
 let arr = t.inorder()
