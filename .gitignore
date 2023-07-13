@@ -1,1 +1,5 @@
 target/
+*.aux
+*.bcf
+*.log
+*.run.xml
