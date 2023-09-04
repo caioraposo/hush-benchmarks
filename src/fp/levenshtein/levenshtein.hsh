@@ -54,11 +54,15 @@ function tlev(a, b)
 	table[[a, b]]
 end
 
+function get_random_str(n)
+	${ head -c $n /dev/urandom }.stdout
+end
+
 std.println("n,time(ms),lev(n)")
 for i in std.range(n, m, o) do
 	# Generate random strings each time
-	let s1 = util.get_random_str(i)
-	let s2 = util.get_random_str(i)
+	let s1 = get_random_str(i)
+	let s2 = get_random_str(i)
 	let t = util.time_ns()
 	let r = lev(s1, s2)
 	t = (util.time_ns() - t) / 1000000 # ns to ms

@@ -3,21 +3,4 @@ function time_ns()
 	return std.int(std.trim(t))
 end
 
-function shuf(i, j, n)
-	let v = []
-	for _ in std.range(0, n, 1) do
-		let k = ${ seq $i $j | shuf -n1 }.stdout
-		std.push(v, std.int(std.trim(k)))
-	end
-	v
-end
-
-function randint(i, j)
-	std.int(std.trim(${ seq $i $j | shuf -n1 }.stdout))
-end
-
-function get_random_str(n)
-	${ ./../../../bin/get-random-str $n }.stdout
-end
-
-@[ time_ns: time_ns, shuf: shuf, randint: randint, get_random_str: get_random_str ]
+@[ time_ns: time_ns ]
