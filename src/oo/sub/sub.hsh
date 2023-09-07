@@ -5,8 +5,10 @@
 # The method `move` returns a new submarine.
 # References: https://adventofcode.com/2021/day/2
 
-let file = std.args()[0]
-let input = ${ cat $file }.stdout
+let args = std.args()
+
+let MAX = std.int(args[0])
+let N = std.int(args[1])
 
 let Submarine = memo function(x, y)
 	@[
@@ -15,7 +17,7 @@ let Submarine = memo function(x, y)
 	]
 end
 
-# Note that we don't memo the base class
+# Note that we don't  the base class
 let Move = function(sub)
 	@[
 		_sub: sub,
@@ -69,14 +71,21 @@ let movements = @[
 	end,
 ]
 
-function solve(input)
-	let sub = Submarine(0, 0)
-	for i in std.range(0, std.len(input) - 1, 1) do
-		let line = input[i]
-		let m = std.split(line, " ")
-		sub = movements[m[0]](sub, std.int(m[1]))
-	end
-	sub._x * sub._y
+let m = ["forward", "up", "down"]
+
+let sub = Submarine(0, 0)
+for i in std.range(0, N, 1) do
+	sub = movements[m[std.randint(0, 2)]](sub, std.randint(1, MAX))
 end
 
-std.println(solve(std.split(input, "\n")))
+#function solve(input)
+#	let sub = Submarine(0, 0)
+#	for i in std.range(0, std.len(input) - 1, 1) do
+#		let line = input[i]
+#		let m = std.split(line, " ")
+#		sub = movements[m[0]](sub, std.int(m[1]))
+#	end
+#	sub._x * sub._y
+#end
+#
+#std.println(solve(std.split(input, "\n")))
