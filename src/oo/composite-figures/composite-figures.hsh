@@ -1,3 +1,11 @@
+let args = std.args()
+
+let MAX = std.int(args[0])
+let MAXHEIGHT = std.int(args[1])
+let MAXWIDTH = std.int(args[2])
+# Number of figures
+let N = std.int(args[3])
+
 # TODO: Implement this function in the standard library.
 function pow(n, e)
 	let i = 1.0
@@ -41,7 +49,7 @@ let Circle = memo function(x, y, r)
 	]
 end
 
-let CompositeFigureUnion = memo function(a, b)
+let CompositeFigureUnion = function(a, b)
 	@[
 		_a: a,
 		_b: b,
@@ -56,7 +64,7 @@ let CompositeFigureUnion = memo function(a, b)
 	]
 end
 
-let CompositeFigureDiference = memo function(a, b)
+let CompositeFigureDiference = function(a, b)
 	@[
 		_a: a,
 		_b: b,
@@ -72,13 +80,22 @@ let CompositeFigureDiference = memo function(a, b)
 end
 
 function plus(a, b)
-	let f = CompositeFigureUnion(a, b)
-	f
+	CompositeFigureUnion(a, b)
 end
 
 function minus(a, b)
-	let f = CompositeFigureDiference(a, b)
-	f
+	CompositeFigureDiference(a, b)
+end
+
+let op = [plus, minus]
+
+for _ in std.range(0, N, 1) do
+	let f0 = Rectangle(
+		std.float(std.randint(0, MAX)),
+		std.float(std.randint(0, MAX)),
+		std.float(std.randint(0, MAXWIDTH)),
+		std.float(std.randint(0, MAXHEIGHT))
+	)
 end
 
 function test_example()

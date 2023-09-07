@@ -3,6 +3,12 @@
 # Description: This program evaluates arithmetic expressions by modeling
 # operators as memoized objects, thus avoiding recalculating past computations.
 
+let args = std.args()
+
+# Number of arthmetic operations
+let MAX = std.int(args[0])
+let N = std.int(args[1])
+
 let Num = memo function(n)
 	@[
 		_n: n,
@@ -62,15 +68,6 @@ let Div = memo function(a, b)
 	]
 end
 
-function test0()
-	let n0 = Num(10000)
-	let n1 = Num(20000)
-	let n2 = Add(n0, n1)
-	let n3 = Div(Mul(n0, n1), Div(n1, n0))
-	let n4 = Div(n1, n0)
-
-	std.println(n3.eval())
-	std.println(n4.eval())
+for _ in std.range(0, N, 1) do
+	let n0 = Num(std.randint(0, MAX))
 end
-
-test0()

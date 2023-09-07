@@ -26,9 +26,9 @@ end
 function Polygon(n)
 	let points = []
 	for _ in std.range(0, n, 1) do
-		let x = util.randint(0, X)
-		let y = util.randint(0, Y)
-		let z = util.randint(0, Z)
+		let x = std.randint(0, X)
+		let y = std.randint(0, Y)
+		let z = std.randint(0, Z)
 		let p = Point(x, y, z)
 		std.push(points, p)
 	end
@@ -36,9 +36,10 @@ function Polygon(n)
 end
 
 # Create random polygons in 3D space
-let polygons = []
 for _ in std.range(0, N, 1) do
-	let p = Polygon(3)
-	std.push(polygons, p)
-	std.println(p)
+	let points = 3
+	let p = Polygon(points)
+	for i in std.range(0, points, 1) do
+		std.println(p[i]._x, p[i]._y, p[i]._z)
+	end
 end

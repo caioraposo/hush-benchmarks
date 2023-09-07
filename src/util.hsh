@@ -1,6 +1,28 @@
-function time_ns()
-	let t = ${ date +"%s%N" }.stdout
-	return std.int(std.trim(t))
+function count_collisions(outfile)
+	std.int(std.trim(${
+		awk 'BEGIN{x=0};/collision/ {if($2>x)x=$2};END{print x}' $outfile
+	}.stdout))
 end
 
-@[ time_ns: time_ns ]
+# Collect running time and memory from benchmark and save data to csv file
+function run_benchmark(cmd, inputs, data_dir, bin, name)
+	let csvfile = ${ echo -n "${data_dir}/csv/${name}.csv" }.stdout
+	{ echo "n,time,memory,collisions" > $csvfile }
+
+	for i in std.iter(inputs) do
+		let outfile = ${ echo -n "${data_dir}/output/${name}-${i}.out" }.stdout
+		std.println(name, i)
+		${
+			echo -n "${i}," >> $csvfile;
+
+			/bin/time -f'%e,%M' $bin $cmd $i 2>1 >> $outfile
+			| tr -d '\n' >> $csvfile;
+		}
+
+		let col = count_collisions(outfile)
+		{ echo ",${col}" >> $csvfile }
+	end
+end
+
+
+@[ run_benchmark: run_benchmark ]

@@ -1,0 +1,32 @@
+#!/usr/bin/env hush
+
+let util = std.import("../../util.hsh")
+
+let PROGRAM = ${ readlink -fn eval.hsh }.stdout
+let DATA_DIR = ${ readlink -fn ../../../data/oo/eval }.stdout
+let ARGS = [500]
+
+# Params for generating the inputs.
+let MIN = 100
+let MAX = 300000
+let STEP = 5000
+
+let inputs = []
+for i in std.range(MIN, MAX, STEP) do
+	std.push(inputs, i)
+end
+
+let cmd = [PROGRAM]
+for a in std.iter(ARGS) do
+	std.push(cmd, a)
+end
+
+if std.len(std.glob(DATA_DIR ++ "/output/*.out")) > 0 then
+	{ rm $DATA_DIR/output/*.out }
+end
+
+util.run_benchmark(cmd, inputs, DATA_DIR, "hush", "original")
+util.run_benchmark(cmd, inputs, DATA_DIR, "uhush", "unsafe-memo")
+util.run_benchmark(cmd, inputs, DATA_DIR, "ghush", "guarded")
+util.run_benchmark(cmd, inputs, DATA_DIR, "ahush", "alias-set")
+util.run_benchmark(cmd, inputs, DATA_DIR, "chush", "collisions")

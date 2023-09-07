@@ -8,8 +8,8 @@
 
 let args = std.args()
 
-# Number of elements in the tree.
-let N = std.int(args[0])
+let MAX = std.int(args[0])
+let N = std.int(args[1]) # Number of nodes in the tree.
 
 let Rational = memo function(p, q)
 	@[
@@ -67,12 +67,11 @@ let BinarySearchTree = function()
 	]
 end
 
-let MAXINT = 1000
-let t = BinarySearchTree()
-for i in std.range(0, N, 1) do
-	let n = Rational(std.randint(0, MAXINT), std.randint(0, MAXINT))
-	t.push(q)
-end
+let tree = BinarySearchTree()
 
-let arr = t.inorder()
-std.println(arr)
+for _ in std.range(0, N, 1) do
+	let p = std.float(std.randint(0, MAX))
+	let q = std.float(std.randint(0, MAX))
+	tree.push(Rational(p, q))
+	std.println(tree.inorder())
+end
