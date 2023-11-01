@@ -1,0 +1,121 @@
+let args = std.args()
+
+let MAX = std.int(args[0])
+let MAXHEIGHT = std.int(args[1])
+let MAXWIDTH = std.int(args[2])
+# Number of figures
+let N = std.int(args[3])
+
+# TODO: Implement this function in the standard library.
+function pow(n, e)
+	let i = 1.0
+	for _ in std.range(0, e, 1) do
+		i = i * n
+	end
+	i
+end
+
+# The rectangle is represented by bottom left point, width, and height.
+let Rectangle =  function(x, y, w, h) 
+	@[
+		_x: x,
+		_y: y,
+		_w: w,
+		_h: h,
+
+		contains: function(x, y)
+			if x < self._x or x > self._x + self._w or y < self._y or y > self._y + self._h then
+				false
+			else
+				true
+			end
+		end,
+	]
+end
+
+let Circle =  function(x, y, r)
+	@[
+		_x: x,
+		_y: y,
+		_r: r,
+
+		contains: function(x, y)
+			if pow(self._r, 2) < pow(self._x - x, 2) + pow(self._y - y, 2) then
+				false
+			else
+				true
+			end
+		end,
+	]
+end
+
+let CompositeFigureUnion = function(a, b)
+	@[
+		_a: a,
+		_b: b,
+
+		contains: function(x, y)
+			if self._a.contains(x, y) or self._b.contains(x, y) then
+				true
+			else
+				false
+			end
+		end,
+	]
+end
+
+let CompositeFigureDiference = function(a, b)
+	@[
+		_a: a,
+		_b: b,
+
+		contains: function(x, y)
+			if self._a.contains(x, y) and not self._b.contains(x, y) then
+				true
+			else
+				false
+			end
+		end,
+	]
+end
+
+function plus(a, b)
+	CompositeFigureUnion(a, b)
+end
+
+function minus(a, b)
+	CompositeFigureDiference(a, b)
+end
+
+let op = [plus, minus]
+
+for _ in std.range(0, N, 1) do
+	let f0 = Rectangle(
+		std.float(std.randint(0, MAX)),
+		std.float(std.randint(0, MAX)),
+		std.float(std.randint(0, MAXWIDTH)),
+		std.float(std.randint(0, MAXHEIGHT))
+	)
+end
+
+function test_example()
+	let A = Rectangle(1.0, 1.0, 3.0, 3.0)
+	let B = Circle(4.5, 2.5, 1.5)
+	let C = plus(A, B)
+	std.assert(C.contains(2.0, 2.0))
+	std.assert(not C.contains(2.0, 0.0))
+	let D = minus(A, B)
+	std.assert(not D.contains(4.0, 2.0))
+	std.assert(D.contains(2.0, 3.0))
+	let E = Circle(3.5, 2.5, 1.5)
+	let F = Rectangle(3.0, 0.0, 3.3, 3.3)
+	let G = minus(F, E)
+	std.assert(not G.contains(4.0, 2.0))
+	std.assert(G.contains(5.0, 1.0))
+	let H = plus(D, G)
+	std.assert(not H.contains(4.0, 2.0))
+	std.assert(H.contains(5.0, 1.0))
+	std.assert(H.contains(2.0, 3.0))
+end
+
+test_example()

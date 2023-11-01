@@ -4,11 +4,11 @@ let util = std.import("../../util.hsh")
 
 let PROGRAM = ${ readlink -fn polygons.hsh }.stdout
 let DATA_DIR = ${ readlink -fn ../../../data/oo/polygons }.stdout
-let ARGS = [30, 30, 30]
+let ARGS = [25, 25, 25]
 
 # Params for generating the inputs.
 let MIN = 100
-let MAX = 50000
+let MAX = 70000
 let STEP = 2000
 
 let inputs = []
@@ -25,8 +25,11 @@ if std.len(std.glob(DATA_DIR ++ "/output/*.out")) > 0 then
 	{ rm $DATA_DIR/output/*.out }
 end
 
-util.run_benchmark(cmd, inputs, DATA_DIR, "hush", "original")
 util.run_benchmark(cmd, inputs, DATA_DIR, "uhush", "unsafe-memo")
 util.run_benchmark(cmd, inputs, DATA_DIR, "ghush", "guarded")
 util.run_benchmark(cmd, inputs, DATA_DIR, "ahush", "alias-set")
+util.run_benchmark(cmd, inputs, DATA_DIR, "ohush", "ownership-pointers")
 util.run_benchmark(cmd, inputs, DATA_DIR, "chush", "collisions")
+cmd[0] = ${ readlink -fn polygons-nomemo.hsh }.stdout
+util.run_benchmark(cmd, inputs, DATA_DIR, "hush", "original")
+

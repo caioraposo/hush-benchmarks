@@ -21,7 +21,7 @@ function max(a, b)
 end
 
 let v = []
-memo function mss(i)
+function mss(i)
 	if i == 0 then
 		v[0]
 	else

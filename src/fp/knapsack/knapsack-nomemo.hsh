@@ -25,7 +25,7 @@ function max(a, b)
 	end
 end
 
-memo function knapsack(c, n)
+function knapsack(c, n)
 	if c == 0 or n == 0 then
 		0
 	elseif w[n-1] > c then

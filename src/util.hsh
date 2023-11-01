@@ -4,11 +4,28 @@ function count_collisions(outfile)
 	}.stdout))
 end
 
+function count_hash(outfile)
+	std.int(std.trim(${
+		awk 'BEGIN{x=0};/hash_counter/ {if($2>x)x=$2};END{print x}' $outfile
+	}.stdout))
+end
+
+function table_insert_time(outfile)
+	std.int(std.trim(${
+		awk 'BEGIN{x=0};/table_insert/ {x += $2};END{print x}' $outfile
+	}.stdout))
+end
+
+function table_get_time(outfile)
+	std.int(std.trim(${
+		awk 'BEGIN{x=0};/table_get/ {x += $2};END{print x}' $outfile
+	}.stdout))
+end
+
 # Collect running time and memory from benchmark and save data to csv file
 function run_benchmark(cmd, inputs, data_dir, bin, name)
 	let csvfile = ${ echo -n "${data_dir}/csv/${name}.csv" }.stdout
-	{ echo "n,time,memory,collisions" > $csvfile }
-
+	{ echo "n,time,memory,collisions,hash_calls,table_get,table_insert" > $csvfile }
 	for i in std.iter(inputs) do
 		let outfile = ${ echo -n "${data_dir}/output/${name}-${i}.out" }.stdout
 		std.println(name, i)
@@ -20,7 +37,10 @@ function run_benchmark(cmd, inputs, data_dir, bin, name)
 		}
 
 		let col = count_collisions(outfile)
-		{ echo ",${col}" >> $csvfile }
+		let hash = count_hash(outfile)
+		let table_get = table_get_time(outfile)
+		let table_insert = table_insert_time(outfile)
+		{ echo ",${col},${hash},${table_get},${table_insert}" >> $csvfile }
 	end
 end
 

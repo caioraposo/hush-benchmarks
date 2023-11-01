@@ -45,7 +45,7 @@ function min(a, b)
 	end
 end
 
-memo function min_path_sum(t, i, j, k)
+function min_path_sum(t, i, j, k)
 	if i == k - 1 then
 		t[i][j]
 	else

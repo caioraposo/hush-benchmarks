@@ -11,7 +11,7 @@ std.randseed(0)
 let MOD = 1000000007
 let N = std.int(args[0])
 
-memo function lambda_terms(n, k)
+function lambda_terms(n, k)
 	if n <= 0 then
 		return 0
 	end

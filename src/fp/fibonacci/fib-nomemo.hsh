@@ -9,7 +9,7 @@ let args = std.args()
 
 let N = std.int(args[0])
 
-memo function fib(n)
+function fib(n)
 	if n < 2 then
 		1
 	else

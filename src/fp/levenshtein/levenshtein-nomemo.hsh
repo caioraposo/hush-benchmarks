@@ -5,6 +5,7 @@
 # This implementation has time complexity of O(n²).
 # References: https://users.monash.edu/~lloyd/tildeAlgDS/Dynamic/Edit/
 
+let util = std.import("../../util.hsh")
 let args = std.args()
 std.randseed(0)
 
@@ -24,7 +25,7 @@ function tail(s)
 	std.substr(s, 1, std.len(s)-1)
 end
 
-memo function lev(a, b)
+function lev(a, b)
 	if std.len(b) == 0 then
 		std.len(a)
 	elseif std.len(a) == 0 then

@@ -8,7 +8,7 @@ std.randseed(0)
 
 let N = std.int(args[0])
 
-let Num = memo function(n)
+let Num =  function(n)
 	@[
 		_n: n,
 
@@ -18,7 +18,7 @@ let Num = memo function(n)
 	]
 end
 
-let Add = memo function(a, b)
+let Add =  function(a, b)
 	@[
 		_a: a,
 		_b: b,
@@ -29,7 +29,7 @@ let Add = memo function(a, b)
 	]
 end
 
-let Sub = memo function(a, b)
+let Sub =  function(a, b)
 	@[
 		_a: a,
 		_b: b,
@@ -40,7 +40,7 @@ let Sub = memo function(a, b)
 	]
 end
 
-let Mul = memo function(a, b)
+let Mul =  function(a, b)
 	@[
 		_a: a,
 		_b: b,
@@ -52,7 +52,7 @@ let Mul = memo function(a, b)
 end
 
 
-let Div = memo function(a, b)
+let Div =  function(a, b)
 	@[
 		_a: a,
 		_b: b,

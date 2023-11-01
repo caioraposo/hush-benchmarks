@@ -25,7 +25,7 @@ end
 let a = get_random_str(M)
 let b = get_random_str(N)
 
-memo function sub(m, n)
+function sub(m, n)
 	if (m == 0 and n == 0) or n == 0 then
 		return 1
 	elseif m == 0 then

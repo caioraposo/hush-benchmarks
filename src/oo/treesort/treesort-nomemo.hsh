@@ -1,0 +1,77 @@
+# Author: Caio Raposo
+# Date: 2023-03-27
+# Description: Tree sort algorithm implementation. It builds a binary search
+# tree and then traveres it in-order so that the elements are visited in sorted
+# order. This algorithm has average time complexity of O(n lg n) and worst-case
+# performance of O(n²) if the tree is unbalanced.
+# References: Sorting Routines for Microcomputers, McLuckie and Barber, page 58.
+
+let args = std.args()
+
+let MAX = std.int(args[0])
+let N = std.int(args[1]) # Number of nodes in the tree.
+
+let Rational =  function(p, q)
+	@[
+		_p: std.float(p),
+		_q: std.float(q),
+		value: function()
+			self._p / self._q
+		end
+	]
+end
+
+let Node = function(n)
+	@[
+		_n: n,
+		_left: nil,
+		_right: nil,
+	]
+end
+
+let BinarySearchTree = function()
+	@[
+		_root: nil,
+
+		_push_r: function(r, n)
+			if r == nil then
+				r = Node(n)
+			elseif r._n.value() >= n.value() then
+				r._left = self._push_r(r._left, n)
+			else
+				r._right = self._push_r(r._right, n)
+			end
+			r
+		end,
+
+		push: function(n)
+			self._root = self._push_r(self._root, n)
+		end,
+
+		inorder: function()
+			let stack = []
+			let sorted = []
+			let node = self._root
+			while not std.is_empty(stack) or node != nil do
+				if node != nil then
+					std.push(stack, node)
+					node = node._left
+				else
+					node = std.pop(stack)
+					std.push(sorted, node._n.value())
+					node = node._right
+				end
+			end
+			sorted
+		end,
+	]
+end
+
+let tree = BinarySearchTree()
+
+for _ in std.range(0, N, 1) do
+	let p = std.float(std.randint(0, MAX))
+	let q = std.float(std.randint(0, MAX))
+	tree.push(Rational(p, q))
+	std.println(tree.inorder())
+end

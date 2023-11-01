@@ -2,13 +2,13 @@
 
 let util = std.import("../../util.hsh")
 
-let PROGRAM = ${ readlink -fn eval.hsh }.stdout
-let DATA_DIR = ${ readlink -fn ../../../data/oo/eval/hash }.stdout
+let PROGRAM = ${ readlink -fn fib.hsh }.stdout
+let DATA_DIR = ${ readlink -fn ../../../data/fp/fibonacci }.stdout
 let ARGS = []
 
 # Params for generating the inputs.
 let MIN = 1
-let MAX = 26
+let MAX = 41
 let STEP = 1
 
 let inputs = []
@@ -25,8 +25,10 @@ if std.len(std.glob(DATA_DIR ++ "/output/*.out")) > 0 then
 	{ rm $DATA_DIR/output/*.out }
 end
 
-#util.run_benchmark(cmd, inputs, DATA_DIR, "ohush", "ownership-pointers")
-util.run_benchmark(cmd, inputs, DATA_DIR, "hohush", "ownership-pointers-hash")
+util.run_benchmark(cmd, inputs, DATA_DIR, "uhush", "unsafe-memo")
+util.run_benchmark(cmd, inputs, DATA_DIR, "ghush", "guarded")
+util.run_benchmark(cmd, inputs, DATA_DIR, "ahush", "alias-set")
+util.run_benchmark(cmd, inputs, DATA_DIR, "ohush", "ownership-pointers")
 
-cmd[0] = ${ readlink -fn eval-nomemo.hsh }.stdout
+cmd[0] = ${ readlink -fn fib-nomemo.hsh }.stdout
 util.run_benchmark(cmd, inputs, DATA_DIR, "hush", "original")
