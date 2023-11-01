@@ -1,0 +1,113 @@
+# Author: Caio Raposo
+# Date: 2023-10-09
+# Description: n x n matrix, m objects (vary n and m to change collisions rate)
+# velocity => integer + direction
+# update at every iteration
+# two versions:
+# update x y coordinates explicitly
+# create new object at every iteration (memo and no memo)
+# object -> coordinate + velocity
+# coordinate -> x, y
+# velocity -> integer + boolean
+
+# Does the alias set implementation has an advantage over no memoization in
+# this benchmark?
+
+let args = std.args()
+
+let MAXVEL = 1000
+let MINVEL = -1000
+let ITER = 100
+let N = std.int(args[0])
+let M = std.int(args[1])
+
+let Point = memo function(x, y)
+	@[
+		_x: x,
+		_y: y,
+	]
+end
+
+let Body = function(coordinate, velocity)
+	@[
+		_coordinate: coordinate,
+		_velocity: velocity,
+
+		# move body inside the m x m space
+		move: function(m)
+			let x = self._coordinate._x
+			let vx = self._velocity[0]
+			if (x + vx) < 0 then
+				self._coordinate._x = m - (((x + vx) % m) + m) % m
+			else
+				self._coordinate._x = (x + vx) % m
+			end
+
+			let y = self._coordinate._y
+			let vy = self._velocity[1]
+			if y + vy < 0 then
+				self._coordinate._y = m - (((y + vy) % m) + m) % m
+			else
+				self._coordinate._y = (y + vy) % m
+			end
+		end,
+	]
+end
+
+let NBodySystem = function(n, m)
+	@[
+		_n: n,
+		_m: m,
+		_bodies: [],
+
+		create_bodies: function()
+			self._bodies = []
+
+			for _ in std.range(0, self._m, 1) do
+				let coord = Point(std.randint(0, n), std.randint(0, n))
+				let vel = [std.randint(MINVEL, MAXVEL), std.randint(MINVEL, MAXVEL)]
+				let body = Body(coord, vel)
+				std.push(self._bodies, body)
+			end
+		end,
+
+		advance: function()
+			for i in std.range(0, std.len(self._bodies), 1) do
+				self._bodies[i].move(self._m)
+			end
+			for i in std.range(0, std.len(self._bodies), 1) do
+				let i_body = self._bodies[i]
+				for j in std.range(i + 1, std.len(self._bodies), 1) do
+					let j_body = self._bodies[j]
+					self.handle_collision(i_body, j_body)
+				end
+			end
+		end,
+
+		collide: function(a, b)
+			if a._coordinate._x == b._coordinate._x and
+				a._coordinate._y == b._coordinate._y then
+				true
+			else
+				false
+			end
+		end,
+
+		handle_collision: function(a, b)
+			if self.collide(a, b) then
+				std.println("Collision at", a._coordinate._x, a._coordinate._y)
+				a._velocity[0] = a._velocity[0] * -1
+				a._velocity[1] = a._velocity[1] * -1
+				b._velocity[0] = b._velocity[0] * -1
+				b._velocity[1] = b._velocity[1] * -1
+			end
+		end,
+
+	]
+end
+
+let system = NBodySystem(N, M)
+system.create_bodies()
+for _ in std.range(0, ITER, 1) do
+	system.advance()
+end

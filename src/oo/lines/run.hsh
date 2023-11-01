@@ -1,0 +1,31 @@
+#!/usr/bin/env hush
+
+let util = std.import("../../util.hsh")
+
+let PROGRAM = ${ readlink -fn lines.hsh }.stdout
+let DATA_DIR = ${ readlink -fn ../../../data/oo/lines }.stdout
+let ARGS = [100] # n x n matrix size
+
+# Params for generating the inputs.
+let MIN = 1
+let MAX = 1000
+let STEP = 1
+
+let inputs = []
+for i in std.range(MIN, MAX, STEP) do
+	std.push(inputs, 100000)
+end
+
+let cmd = [PROGRAM]
+for a in std.iter(ARGS) do
+	std.push(cmd, a)
+end
+
+if std.len(std.glob(DATA_DIR ++ "/output/*.out")) > 0 then
+	{ rm $DATA_DIR/output/*.out }
+end
+
+util.run_benchmark(cmd, inputs, DATA_DIR, "ohush", "compound")
+
+cmd[0] = ${ readlink -fn lines-nomemo.hsh }.stdout
+util.run_benchmark(cmd, inputs, DATA_DIR, "hush", "original")

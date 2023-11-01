@@ -1,0 +1,36 @@
+# Author: Caio Raposo
+# Date: 2023-10-09
+# Description: n x n space, m lines
+
+let args = std.args()
+std.randseed(0)
+
+let N = std.int(args[0])
+let M = std.int(args[1])
+
+let Point = memo function(x, y)
+	@[
+		_x: x,
+		_y: y,
+	]
+end
+
+let Line = memo function(p0, p1)
+	let line = @[]
+
+	# handle division by zero
+	if p0._x - p1._x != 0 then
+		line["a"] = (p0._y - p1._y) / (p0._x - p1._x)
+	else
+		line["a"] = (p0._y - p1._y)
+	end
+	line["b"] = p0._y - line["a"] * p0._x
+
+	line
+end
+
+for _ in std.range(0, M, 1) do
+	let p0 = Point(std.randint(0, N), std.randint(0, N))
+	let p1 = Point(std.randint(0, N), std.randint(0, N))
+	let line = Line(p0, p1)
+end
