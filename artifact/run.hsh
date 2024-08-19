@@ -1,0 +1,23 @@
+#!/usr/bin/env hush
+
+let args = std.args()
+
+let OUTPUT = std.cwd() ++ "/" ++ args[0]
+
+let programs = [
+	"composite-figures",
+	"eval",
+	"lines",
+	"nbody",
+	"polygons",
+	"sub",
+	"treesort"
+]
+
+std.cd("../src/oo/")
+
+for program in std.iter(programs) do
+	std.cd(program)
+	{ hush run.hsh $OUTPUT }
+	std.cd("..")
+end
