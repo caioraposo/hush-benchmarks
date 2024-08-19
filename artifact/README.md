@@ -18,10 +18,10 @@ This setup has been successfully reproduced in the following system:
 Ensure that your system has the `GNU time` installed. Not to be confused with bash's `time` command. On Debian and derivatives, this can be accomplished with a simple install through apt.
 
 ```sh
-# apt install time
+$ sudo apt install time
 ```
 
-You will also need a recent version of  `Rust` (preferably 1.80) and `git`.
+You will also need `Rust` (preferably 1.80) and `git`.
 Optionally, to generate the charts, you should have matplotlib installed.
 Check out the [installation guide](https://matplotlib.org/stable/install/index.html) on the official documentation.
 
@@ -44,7 +44,7 @@ $ cargo build --release && cargo install --path .
 
 To evaluate the programs, we used five different versions of Hush: Original (already installed), Unsafe, Guarded, Alias Sets, and Sop. They reside in different branches of the git repo. Assuming you are in the hush directory, run the following commands (you will need root privileges to copy the binaries to `/usr/local/bin`):
 
-```sh
+```
 # git checkout ownership-pointers && cargo build --release
 # cp ./target/release/hush /usr/local/bin/ohush
 # git checkout unsafe-memoization && cargo build --release
@@ -55,7 +55,7 @@ To evaluate the programs, we used five different versions of Hush: Original (alr
 # cp ./target/release/hush /usr/local/bin/ahush
 ```
 
-You can substitute `/usr/local/bin` with your prefered directory for binaries such as `~/.local/bin`. Note that this directory has to be in the `$PATH` variable.
+To avoid root permissions, you can substitute `/usr/local/bin` with your prefered directory for binaries such as `~/.local/bin`. Note that this directory has to be in the `$PATH` variable.
 
 # Step 3: Clone the Hush Benchmarks repository
 
