@@ -6,6 +6,7 @@
 
 let util = std.import("../../util.hsh")
 let args = std.args()
+std.randseed(0)
 
 # Dimentions of the 3D space
 let X = std.int(args[0])

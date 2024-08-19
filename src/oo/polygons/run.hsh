@@ -1,9 +1,13 @@
 #!/usr/bin/env hush
 
+let args = std.args()
 let util = std.import("../../util.hsh")
 
+let OUTPUT = args[0]
+{ mkdir -p $OUTPUT/polygons/output }
+
 let PROGRAM = ${ readlink -fn polygons.hsh }.stdout
-let DATA_DIR = ${ readlink -fn ../../../data/oo/polygons }.stdout
+let DATA_DIR = ${ readlink -fn $OUTPUT/polygons }.stdout
 let ARGS = [25, 25, 25]
 
 # Params for generating the inputs.
@@ -28,8 +32,7 @@ end
 util.run_benchmark(cmd, inputs, DATA_DIR, "uhush", "unsafe-memo")
 util.run_benchmark(cmd, inputs, DATA_DIR, "ghush", "guarded")
 util.run_benchmark(cmd, inputs, DATA_DIR, "ahush", "alias-set")
-util.run_benchmark(cmd, inputs, DATA_DIR, "ohush", "ownership-pointers")
-util.run_benchmark(cmd, inputs, DATA_DIR, "chush", "collisions")
+util.run_benchmark(cmd, inputs, DATA_DIR, "ohush", "sop-memo")
+
 cmd[0] = ${ readlink -fn polygons-nomemo.hsh }.stdout
 util.run_benchmark(cmd, inputs, DATA_DIR, "hush", "original")
-

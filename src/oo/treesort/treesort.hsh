@@ -7,6 +7,7 @@
 # References: Sorting Routines for Microcomputers, McLuckie and Barber, page 58.
 
 let args = std.args()
+std.randseed(0)
 
 let MAX = std.int(args[0])
 let N = std.int(args[1]) # Number of nodes in the tree.

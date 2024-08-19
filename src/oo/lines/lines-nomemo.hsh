@@ -28,4 +28,5 @@ for _ in std.range(0, M, 1) do
 	let p1_x = std.randint(0, N)
 	let p1_y = std.randint(0, N)
 	let line = Line(p0_x, p0_y, p1_x, p1_y)
+	std.println(line)
 end

@@ -10,10 +10,8 @@
 # coordinate -> x, y
 # velocity -> integer + boolean
 
-# Does the alias set implementation has an advantage over no memoization in
-# this benchmark?
-
 let args = std.args()
+std.randseed(0)
 
 let MAXVEL = 1000
 let MINVEL = -1000

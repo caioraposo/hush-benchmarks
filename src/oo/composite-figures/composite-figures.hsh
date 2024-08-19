@@ -1,5 +1,7 @@
 let args = std.args()
 
+std.randseed(0)
+
 let MAX = std.int(args[0])
 let MAXHEIGHT = std.int(args[1])
 let MAXWIDTH = std.int(args[2])
@@ -96,6 +98,12 @@ for _ in std.range(0, N, 1) do
 		std.float(std.randint(0, MAXWIDTH)),
 		std.float(std.randint(0, MAXHEIGHT))
 	)
+	std.println(
+		f0.contains(
+			std.float(std.randint(0, MAX)),
+			std.float(std.randint(0, MAX))
+		)
+	)
 end
 
 function test_example()
@@ -117,5 +125,3 @@ function test_example()
 	std.assert(H.contains(5.0, 1.0))
 	std.assert(H.contains(2.0, 3.0))
 end
-
-test_example()

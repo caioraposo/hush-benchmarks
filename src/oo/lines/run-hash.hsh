@@ -1,0 +1,33 @@
+#!/usr/bin/env hush
+
+let util = std.import("../../util.hsh")
+
+let PROGRAM = ${ readlink -fn lines-point.hsh }.stdout
+let DATA_DIR = ${ readlink -fn ../../../data/hash/lines/ }.stdout
+let ARGS = [100] # n x n matrix size
+
+# Params for generating the inputs.
+let MIN = 1
+let MAX = 100000
+let STEP = 1000
+
+let inputs = []
+for i in std.range(MIN, MAX, STEP) do
+	std.push(inputs, i)
+end
+
+let cmd = [PROGRAM]
+for a in std.iter(ARGS) do
+	std.push(cmd, a)
+end
+
+if std.len(std.glob(DATA_DIR ++ "/output/*.out")) > 0 then
+	{ rm $DATA_DIR/output/*.out }
+end
+
+util.run_benchmark(cmd, inputs, DATA_DIR, "ohush", "siphash")
+util.run_benchmark(cmd, inputs, DATA_DIR, "shhush", "seahash")
+util.run_benchmark(cmd, inputs, DATA_DIR, "ahhush", "ahash")
+util.run_benchmark(cmd, inputs, DATA_DIR, "fxhush", "fxhash")
+util.run_benchmark(cmd, inputs, DATA_DIR, "fnvhush", "fnvhash")
+util.run_benchmark(cmd, inputs, DATA_DIR, "hbhush", "hashbrown")

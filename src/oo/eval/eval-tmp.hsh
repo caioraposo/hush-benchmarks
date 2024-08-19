@@ -1,0 +1,86 @@
+# Author: Caio Raposo
+# Date: 2023-03-23
+# Description: This program evaluates arithmetic expressions by modeling
+# operators as memoized objects, thus avoiding recalculating past computations.
+
+let args = std.args()
+std.randseed(0)
+
+let N = std.int(args[0])
+
+let Num = memo function(n)
+	@[
+		_n: n,
+
+		eval: function()
+			self._n
+		end
+	]
+end
+
+let Add = memo function(a, b)
+	@[
+		_a: a,
+		_b: b,
+
+		eval: function()
+			self._a.eval() + self._b.eval()
+		end
+	]
+end
+
+let Sub = memo function(a, b)
+	@[
+		_a: a,
+		_b: b,
+
+		eval: function()
+			self._a.eval() - self._b.eval()
+		end
+	]
+end
+
+let Mul = memo function(a, b)
+	@[
+		_a: a,
+		_b: b,
+
+		eval: function()
+			self._a.eval() * self._b.eval()
+		end
+	]
+end
+
+
+let Div = memo function(a, b)
+	@[
+		_a: a,
+		_b: b,
+
+		eval: function()
+			if self._b.eval() == 0 then
+				self._a.eval()
+			else
+				self._a.eval() / self._b.eval()
+			end
+		end
+	]
+end
+
+# Tree of twos for testing hash
+#let one = Num(1)
+#let add = Add(one, one)
+#for _ in std.range(1, N, 1) do
+#	add = Add(add, add)
+#end
+#std.println(add.eval())
+
+function gen(n)
+	if n == 1 then
+		Num(std.randint(0, 9))
+	else
+	    let T = gen(n-1)
+		Add(T, T)
+	end
+end
+gen(N)

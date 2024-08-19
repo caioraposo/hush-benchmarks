@@ -2,10 +2,11 @@
 # Date: 2023-01-10
 # Description: This program generates random polygons in 3D space. Polygons are
 # a list of arbitrary points of which shall be reutilized by multiple polygons
-# if ization is active.
+# if memoization is active.
 
 let util = std.import("../../util.hsh")
 let args = std.args()
+std.randseed(0)
 
 # Dimentions of the 3D space
 let X = std.int(args[0])

@@ -1,0 +1,31 @@
+#!/usr/bin/env hush
+
+let util = std.import("../../util.hsh")
+
+let PROGRAM = ${ readlink -fn eval-tmp.hsh }.stdout
+let DATA_DIR = ${ readlink -fn ../../../data/oo/eval/hash }.stdout
+let ARGS = []
+
+# Params for generating the inputs.
+let MIN = 1
+let MAX = 26
+let STEP = 1
+
+let inputs = []
+for i in std.range(MIN, MAX, STEP) do
+	std.push(inputs, i)
+end
+
+let cmd = [PROGRAM]
+for a in std.iter(ARGS) do
+	std.push(cmd, a)
+end
+
+if std.len(std.glob(DATA_DIR ++ "/output/*.out")) > 0 then
+	{ rm $DATA_DIR/output/*.out }
+end
+
+util.run_benchmark(cmd, inputs, DATA_DIR, "ohush", "sopmemo")
+
+cmd[0] = ${ readlink -fn eval-tmp-nomemo.hsh }.stdout
+util.run_benchmark(cmd, inputs, DATA_DIR, "hush", "original")
