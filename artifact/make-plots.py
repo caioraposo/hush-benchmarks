@@ -1,10 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import sys
+import sys, os
 
 import matplotlib as mpl
 
-OUTPUT = sys.argv[1]
+DATA = sys.argv[1]
+OUTPUT = sys.argv[2]
+os.makedirs(OUTPUT)
 
 programs = [
 	"composite-figures",
@@ -17,12 +19,12 @@ programs = [
 ]
 
 for program in programs:
-    f1 = np.genfromtxt(f"{OUTPUT}/{program}/original.csv", delimiter=",", names=True)
-    f2 = np.genfromtxt(f"{OUTPUT}/{program}/unsafe-memo.csv", delimiter=",", names=True)
+    f1 = np.genfromtxt(f"{DATA}/{program}/original.csv", delimiter=",", names=True)
+    f2 = np.genfromtxt(f"{DATA}/{program}/unsafe-memo.csv", delimiter=",", names=True)
     if program != "nbody":
-        f3 = np.genfromtxt(f"{OUTPUT}/{program}/guarded.csv", delimiter=",", names=True)
-    f4 = np.genfromtxt(f"{OUTPUT}/{program}/alias-set.csv", delimiter=",", names=True)
-    f5 = np.genfromtxt(f"{OUTPUT}/{program}/sop-memo.csv", delimiter=",", names=True)
+        f3 = np.genfromtxt(f"{DATA}/{program}/guarded.csv", delimiter=",", names=True)
+    f4 = np.genfromtxt(f"{DATA}/{program}/alias-set.csv", delimiter=",", names=True)
+    f5 = np.genfromtxt(f"{DATA}/{program}/sop-memo.csv", delimiter=",", names=True)
 
     plt.figure(1)
     fig, ax = plt.subplots()

@@ -1,8 +1,7 @@
 # This is the Docker file of the Hush artifact.
-# To run the different research quentions, do:
+# To run the experiments, do:
 #
-# docker run --rm docker-artifact hush rq1.hsh
-# docker run --rm docker-artifact hush rq2.hsh
+# docker run -v ./output_dir:/hush-benchmarks/artifact/results hush-artifact
 #
 # Author: Caio Vinícius Raposo Ribeiro
 # Date: 2024-08-18
@@ -13,13 +12,6 @@ FROM rust:1.80-alpine3.19
 # Install dependencies
 RUN apk add --no-cache git musl-dev && \
     apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing time
-
-# Python and matplotlib
-RUN apk add --no-cache tesseract-ocr python3 py3-numpy && \
-    pip3 install --upgrade pip setuptools wheel && \
-    apk add --no-cache --virtual .build-deps gcc g++ zlib-dev make python3-dev py-numpy-dev jpeg-dev && \
-    pip3 install matplotlib && \
-    apk del .build-deps
 
 # Compile and install four versions of Hush: onwership-pointers, unsafe,
 # guarded, and alias set.
@@ -41,4 +33,4 @@ RUN git clone https://github.com/caioraposo/hush-benchmarks
 # Set the working directory
 WORKDIR /hush-benchmarks/artifact
 
-ENTRYPOINT ["/bin/sh", "-c", "hush run.hsh results && python make-plots.py results"]
+ENTRYPOINT ["/bin/sh", "-c", "hush run.hsh results"]

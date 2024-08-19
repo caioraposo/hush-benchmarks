@@ -22,6 +22,8 @@ Ensure that your system has the `GNU time` installed. Not to be confused with ba
 ```
 
 You will also need a recent version of  `Rust` (preferably 1.80) and `git`.
+Optionally, to generate the charts, you should have matplotlib installed.
+Check out the [installation guide](https://matplotlib.org/stable/install/index.html) on the official documentation.
 
 # Step 1: Installing Hush
 
@@ -102,12 +104,12 @@ results
 ...
 ```
 
-# Step 5: Generate the charts
+# Step 5: Generate the charts (optional)
 
 To generate charts from the output files, run the `make-plots.py` python script, passing the output directory as argument:
 
 ```sh
-$ python make-plots.py results
+$ python make-plots.py results charts
 ```
 
-This script creates PNG files and outputs it to the `results` directory.
+The script creates PNG files and saves them in the `charts` directory.
