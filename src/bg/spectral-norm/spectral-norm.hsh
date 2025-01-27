@@ -1,0 +1,68 @@
+function build_array(size, default)
+    let arr = []
+    for i in std.range(0, size, 1) do
+        std.push(arr, default)
+    end
+    arr
+end
+
+function sqrt(n)
+    let x = n
+    let y = 1.0
+    let err = 0.0000000001
+    
+    while x - y > err do
+        x = (x + y) / 2.0
+        y = n / x
+    end
+    x
+end
+
+function eval_A(i, j)
+    i = std.float(i)
+    j = std.float(j)
+    1.0/((i+j)*(i+j+1.0)/2.0+i+1.0)
+end
+
+function eval_A_times_u(N, u, Au)
+    for i in std.range(0, N, 1) do
+        Au[i] = 0.0
+        for j in std.range(0, N, 1) do
+            Au[i] = Au[i] + eval_A(i, j) * u[j]
+        end
+    end
+end
+
+function eval_At_times_u(N, u, Au)
+    for i in std.range(0, N, 1) do
+        Au[i] = 0.0
+        for j in std.range(0, N, 1) do
+            Au[i] = Au[i] + eval_A(j, i) * u[j]
+        end
+    end
+end
+
+function eval_AtA_times_u(N, u, AtAu)
+    let v = build_array(N, 1.0)
+    eval_A_times_u(N, u, v)
+    eval_At_times_u(N, v, AtAu)
+end
+
+let N = std.int(std.args()[0])
+let u = build_array(N, 1.0)
+let v = build_array(N, 1.0)
+
+for i in std.range(0, 10, 1) do
+    eval_AtA_times_u(N,u,v)
+    eval_AtA_times_u(N,v,u)
+end
+
+let vBv = 0.0
+let vv = 0.0
+
+for i in std.range(0, N, 1) do
+    vBv = vBv + u[i]*v[i]
+    vv = vv + v[i]*v[i]
+end
+
+std.print(std.substr(std.to_string(sqrt(vBv/vv)), 0, 11))

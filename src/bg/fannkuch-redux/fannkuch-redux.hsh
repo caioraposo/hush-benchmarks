@@ -1,0 +1,93 @@
+#!/usr/bin/env hush
+
+function fannkuch(n)
+    let perm = []
+    let count = []
+    let perm1 = []
+
+    for i in std.range(0, n+1, 1) do 
+        std.push(perm, 0)
+        std.push(count, 0)
+        std.push(perm1, i)
+    end
+
+    let f = 0
+    let flips = 0
+    let nperm = 0
+    let checksum = 0
+    let j = 0
+    let k = 0
+
+    let r = n
+    while r > 0 do
+        let i = 0
+        while r != 1 do
+            count[r-1] = r
+            r = r - 1
+        end
+        while i < n do
+            perm[i] = perm1[i]
+            i = i + 1
+        end
+
+        # Count flips and update max and checksum
+        f = 0
+        k = perm[0]
+        while k != 0 do
+            let i = 0
+            while 2*i < k do
+                let t = perm[i]
+                perm[i] = perm[k-i]
+                perm[k-i] = t
+                i = i + 1
+            end
+
+            k = perm[0]
+            f = f + 1
+        end
+
+        if f > flips then
+            flips = f
+        end
+        if (nperm % 2) == 0 then
+            checksum = checksum + f
+        else
+            checksum = checksum - f
+        end
+
+        # Use incremental change to generate another permutation
+        let more = true
+        while more do
+            if r == n then
+                std.print(checksum)
+                return flips
+            end
+
+            let p0 = perm1[0]
+            let i = 0
+            while i < r do
+                j = i + 1
+                perm1[i] = perm1[j]
+                i = j
+            end
+
+            perm1[r] = p0
+
+            count[r] = count[r] - 1
+            if count[r] > 0 then
+                more = false
+            else
+                r = r + 1
+            end
+        end
+
+        nperm = nperm + 1
+    end
+
+    flips
+end
+
+let arguments = std.args()
+let n = if std.is_empty(arguments) then 7 else std.int(arguments[0]) end
+
+std.print("Pfannkuchen(" ++ std.to_string(n) ++ ") = " ++ std.to_string(fannkuch(n)))
