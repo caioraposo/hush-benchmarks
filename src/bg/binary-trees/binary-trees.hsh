@@ -1,0 +1,63 @@
+let Node = function(left, right)
+    @[
+        left: left,
+        right: right,
+    ]
+end
+
+function make_tree(depth)
+    let root_node = Node(nil, nil)
+
+    if depth > 0 then
+        root_node.left = make_tree(depth-1)
+        root_node.right = make_tree(depth-1)
+    end
+
+    root_node
+end
+
+function check_tree(node)
+    if node.left == nil then
+        return 1
+    end
+
+    1 + check_tree(node.left) + check_tree(node.right)
+end
+
+function pow(b, e)
+    let acc = 1
+    while e > 0 do
+        acc = acc * b
+        e = e - 1
+    end 
+    acc
+end
+
+let min_depth = 4
+let max_depth = std.int(std.args()[0])
+
+if max_depth < min_depth then
+    max_depth = min_depth+2
+end
+
+let stretch_depth = max_depth + 1
+
+std.print("stretch tree of depth " ++ std.to_string(stretch_depth), 
+          " check: " ++ std.to_string(check_tree(make_tree(stretch_depth))))
+
+let long_lived_tree = make_tree(max_depth)
+
+let iterations = pow(2, max_depth)
+
+for depth in std.range(min_depth, stretch_depth, 2) do
+    let check = 0
+    for i in std.range(1, iterations + 1, 1) do
+        check = check + check_tree(make_tree(depth))
+    end
+
+    std.print(std.to_string(iterations), " trees of depth " ++ std.to_string(depth), " check: " ++ std.to_string(check))
+    iterations = iterations / 4
+end
+
+std.print("long lived tree of depth " ++ std.to_string(max_depth), " check: " ++ std.to_string(check_tree(long_lived_tree)))
+

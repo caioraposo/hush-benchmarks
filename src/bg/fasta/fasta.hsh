@@ -1,0 +1,96 @@
+let IM = 139968.0
+let IA = 3877.0
+let IC = 29573.0
+
+let seed = 42.0
+
+# fasta_rand: float -> float
+function fasta_rand(max)
+    seed = (seed * IA + IC) % IM
+    max * seed / IM
+end
+
+let alu = "GGCCGGGCGCGGTGGCTCACGCCTGTAATCCCAGCACTTTGGGAGGCCGAGGCGGGCGGATCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAACATGGTGAAACCCCGTCTCTACTAAAAATACAAAAATTAGCCGGGCGTGGTGGCGCGCGCCTGTAATCCCAGCTACTCGGGAGGCTGAGGCAGGAGAATCGCTTGAACCCGGGAGGCGGAGGTTGCAGTGAGCCGAGATCGCGCCACTGCACTCCAGCCTGGGCGACAGAGCGAGACTCCGTCTCAAAAA"
+
+let iub = "acgtBDHKMNRSVWY"
+let iub_p = [
+    0.27,
+    0.12,
+    0.12,
+    0.27,
+    0.02,
+    0.02,
+    0.02,
+    0.02,
+    0.02,
+    0.02,
+    0.02,
+    0.02,
+    0.02,
+    0.02,
+    0.02
+]
+
+let homosapiens = "acgt"
+let homosapiens_p = [
+    0.3029549426680,
+    0.1979883004921,
+    0.1975473066391,
+    0.3015094502008
+]
+
+let LINELEN = 60
+
+# repeat_fasta: string, int -> void
+function repeat_fasta(seq, n)
+    let len = std.len(seq)
+    
+    let keep_i = 0
+    for i in std.range(0, n, 1) do
+        keep_i = i
+        std.print(seq[i % len])
+        if (i % LINELEN) == (LINELEN - 1) then
+            std.print("\n")
+        end
+    end
+    if (keep_i % LINELEN) != 0 then
+        std.print("\n")
+    end
+end
+
+# random_fasta: string, [double], int -> void
+function random_fasta(symb, probability, n)
+    let len = std.len(symb)
+    let i = 0
+    let j = 0
+    while (i < n) do
+        let v = fasta_rand(1.0)
+        j = 0
+        while (j < len-1) do
+            v = v - probability[j]
+            if v < 0.0 then
+                break
+            end
+            j = j + 1
+        end
+        std.print(symb[j])
+        if (i % LINELEN) == (LINELEN - 1) then
+            std.print("\n")
+        end
+        i = i + 1
+    end
+    if (i % LINELEN) != 0 then
+        std.print("\n")
+    end
+end
+
+let n = std.int(std.args()[0])
+
+std.print(">ONE Homo sapiens alu\n")
+repeat_fasta(alu, n*2)
+
+std.print(">TWO IUB ambiguity codes\n")
+random_fasta(iub, iub_p, n*3)
+
+std.print(">THREE Homo sapiens frequency\n")
+random_fasta(homosapiens, homosapiens_p, n*5)

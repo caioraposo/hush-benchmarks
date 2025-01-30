@@ -1,0 +1,49 @@
+function read_all()
+    ${ cat - }.stdout
+end
+
+let seq = read_all()
+let ilen = std.len(seq)
+
+let pat = std.regex(">.*\n|\n")
+seq = pat.replace(seq, "")
+let clen = std.len(seq)
+
+let variants = [
+    "agggtaaa|tttaccct",
+    "[cgt]gggtaaa|tttaccc[acg]",
+    "a[act]ggtaaa|tttacc[agt]t",
+    "ag[act]gtaaa|tttac[agt]ct",
+    "agg[act]taaa|ttta[agt]cct",
+    "aggg[acg]aaa|ttt[cgt]ccct",
+    "agggt[cgt]aa|tt[acg]accct",
+    "agggta[cgt]a|t[acg]taccct",
+    "agggtaa[cgt]|[acg]ttaccct",
+]
+
+for v in std.iter(variants) do
+    pat = std.regex(v)
+    std.print(v ++ " " ++ std.to_string(std.len(pat.split(seq))-1))
+    std.print("\n")
+end
+
+let subst = [
+    ["tHa[Nt]", "<4>"],
+    ["aND|caN|Ha[DS]|WaS", "<3>"],
+    ["a[NSt]|BY", "<2>"],
+    ["<[^>]*>", "|"],
+    ["\\|[^|][^|]*\\|", "-"]
+]
+
+for item in std.iter(subst) do
+    pat = std.regex(item[0])
+    seq = pat.replace(seq, item[1])
+end
+
+std.print("\n")
+std.print(ilen)
+std.print("\n")
+std.print(clen)
+std.print("\n")
+std.print(std.len(seq))
+std.print("\n")
